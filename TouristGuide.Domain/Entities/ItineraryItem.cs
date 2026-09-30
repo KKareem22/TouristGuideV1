@@ -3,7 +3,7 @@ using TouristGuide.Domain.Enums;
 
 namespace TouristGuide.Domain.Entities
 {
-    public class ItineraryItem : BaseEntity
+    public class ItineraryItem : BaseEntity<int>
     {
         public ItemType ItemType { get; set; }
         public int? ReferenceId { get; set; }

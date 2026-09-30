@@ -2,7 +2,7 @@
 
 namespace TouristGuide.Domain.Entities
 {
-    public class Notification : BaseEntity
+    public class Notification : BaseEntity<int>
     {
         public string UserId { get; set; } = string.Empty;
         public string Title { get; set; } = string.Empty;

@@ -3,7 +3,7 @@ using TouristGuide.Domain.Enums;
 
 namespace TouristGuide.Domain.Entities
 {
-    public class ServiceBooking: BaseEntity
+    public class ServiceBooking: BaseEntity<int>
     {
         public DateTime BookingDate { get; set; }
         public BookingStatus Status { get; set; } = BookingStatus.Pending;

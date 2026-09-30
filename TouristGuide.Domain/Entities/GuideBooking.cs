@@ -3,7 +3,7 @@ using TouristGuide.Domain.Enums;
 
 namespace TouristGuide.Domain.Entities
 {
-    public class GuideBooking : BaseEntity
+    public class GuideBooking : BaseEntity<int>
     {
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

@@ -2,7 +2,7 @@
 
 namespace TouristGuide.Domain.Entities
 {
-    public class ServiceProviderProfile : BaseEntity
+    public class ServiceProviderProfile : BaseEntity<int>
     {
         public string UserId { get; set; } = string.Empty;
         public string CompanyName { get; set; } = string.Empty;

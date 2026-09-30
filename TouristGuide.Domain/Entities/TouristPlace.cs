@@ -3,7 +3,7 @@ using TouristGuide.Domain.Enums;
 
 namespace TouristGuide.Domain.Entities
 {
-    public class TouristPlace : BaseEntity
+    public class TouristPlace : BaseEntity<int>
     {
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;

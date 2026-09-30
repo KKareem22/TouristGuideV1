@@ -3,7 +3,7 @@ using TouristGuide.Domain.Enums;
 
 namespace TouristGuide.Domain.Entities
 {
-    public class Review:BaseEntity
+    public class Review:BaseEntity<int>
     {
         public ReferenceType ReferenceType { get; set; }
         public int ReferenceId { get; set; }
