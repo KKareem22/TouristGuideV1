@@ -1,12 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using TouristGuide.Domain.Interfaces;
 using TouristGuide.Infrastructure.Data;
+using TouristGuide.Infrastructure.Repositories;
 
 namespace TouristGuide.Infrastructure
 {
@@ -19,6 +16,10 @@ namespace TouristGuide.Infrastructure
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
 
+
+            // Register Generic Repository & Unit of Work
+            services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }
     }
