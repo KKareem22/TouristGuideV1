@@ -1,4 +1,6 @@
 
+using TouristGuide.Infrastructure;
+
 namespace TouristGuide.API
 {
     public class Program
@@ -10,6 +12,9 @@ namespace TouristGuide.API
             // Add services to the container.
 
             builder.Services.AddControllers();
+            builder.Services.AddInfrastructureServices(builder.Configuration);
+
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
