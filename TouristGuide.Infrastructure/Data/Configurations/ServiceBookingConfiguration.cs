@@ -8,15 +8,14 @@ namespace TouristGuide.Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<ServiceBooking> builder)
         {
-            // Prevent Cascade Delete
             builder.HasOne(sb => sb.Service)
                    .WithMany(s => s.ServiceBookings)
                    .HasForeignKey(sb => sb.ServiceId)
                    .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(sb => sb.Tourist)
+            builder.HasOne(sb => sb.TouristProfile)
                    .WithMany(t => t.ServiceBookings)
-                   .HasForeignKey(sb => sb.TouristId)
+                   .HasForeignKey(sb => sb.TouristProfileId)
                    .OnDelete(DeleteBehavior.Restrict);
         }
     }

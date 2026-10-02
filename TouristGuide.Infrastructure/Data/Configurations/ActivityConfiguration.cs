@@ -14,6 +14,9 @@ namespace TouristGuide.Infrastructure.Data.Configurations
             builder.Property(a => a.Name)
                    .HasMaxLength(150)
                    .IsRequired();
+
+            builder.Property(a => a.Badge)
+                   .HasMaxLength(100);
         }
     }
 }

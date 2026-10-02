@@ -1,10 +1,10 @@
-﻿using TouristGuide.Domain.Common;
+using TouristGuide.Domain.Common;
 
 namespace TouristGuide.Domain.Entities
 {
-    public class GuideAvailability : BaseEntity<int>
+    public class GuideWeeklyAvailability : BaseEntity<int>
     {
-        public DateTime Date { get; set; }
+        public DayOfWeek Day { get; set; }       // Monday=1 … Sunday=0 (System.DayOfWeek)
         public bool IsAvailable { get; set; } = true;
 
         public int GuideProfileId { get; set; }

@@ -22,6 +22,170 @@ namespace TouristGuide.Infrastructure.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("TouristGuide.Domain.Entities.Accommodation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("AverageRating")
+                        .HasColumnType("decimal(3,2)");
+
+                    b.Property<TimeSpan>("CheckInTime")
+                        .HasColumnType("time");
+
+                    b.Property<TimeSpan>("CheckOutTime")
+                        .HasColumnType("time");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)")
+                        .HasDefaultValue("USD");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<double?>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("Longitude")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("PricePerNight")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ReviewCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StarRating")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ThumbnailUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("WebsiteUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Accommodations");
+                });
+
+            modelBuilder.Entity("TouristGuide.Domain.Entities.AccommodationAmenity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccommodationId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("IconCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccommodationId");
+
+                    b.ToTable("AccommodationAmenities");
+                });
+
+            modelBuilder.Entity("TouristGuide.Domain.Entities.AccommodationImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccommodationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Caption")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccommodationId");
+
+                    b.ToTable("AccommodationImages");
+                });
+
             modelBuilder.Entity("TouristGuide.Domain.Entities.Activity", b =>
                 {
                     b.Property<int>("Id")
@@ -29,6 +193,10 @@ namespace TouristGuide.Infrastructure.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Badge")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -64,7 +232,47 @@ namespace TouristGuide.Infrastructure.Data.Migrations
                     b.ToTable("Activities");
                 });
 
-            modelBuilder.Entity("TouristGuide.Domain.Entities.GuideAvailability", b =>
+            modelBuilder.Entity("TouristGuide.Domain.Entities.AiChatMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SessionId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("TokensUsed")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SessionId");
+
+                    b.ToTable("AiChatMessages");
+                });
+
+            modelBuilder.Entity("TouristGuide.Domain.Entities.AiChatSession", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -75,8 +283,216 @@ namespace TouristGuide.Infrastructure.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AiChatSessions");
+                });
+
+            modelBuilder.Entity("TouristGuide.Domain.Entities.AiRecommendationLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Feedback")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("GeneratedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("RecommendationType")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RecommendedEntityId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Score")
+                        .HasColumnType("decimal(5,4)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("WasAccepted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AiRecommendationLogs");
+                });
+
+            modelBuilder.Entity("TouristGuide.Domain.Entities.AiTripRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BudgetTier")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Destination")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<int?>("GeneratedTripId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Interests")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("RequestedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("TravelDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TravelerCount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("WasConverted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GeneratedTripId");
+
+                    b.ToTable("AiTripRequests");
+                });
+
+            modelBuilder.Entity("TouristGuide.Domain.Entities.GuideProfile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("AverageRating")
+                        .HasColumnType("decimal(3,2)");
+
+                    b.Property<string>("Bio")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CoverImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ExperienceYears")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HappyTravelers")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Languages")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("LicenseNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("PricePerPerson")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ProfileImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ReviewCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Specialties")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GuideProfiles");
+                });
+
+            modelBuilder.Entity("TouristGuide.Domain.Entities.GuideWeeklyAvailability", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Day")
+                        .HasColumnType("int");
 
                     b.Property<int>("GuideProfileId")
                         .HasColumnType("int");
@@ -94,98 +510,7 @@ namespace TouristGuide.Infrastructure.Data.Migrations
 
                     b.HasIndex("GuideProfileId");
 
-                    b.ToTable("GuideAvailabilities");
-                });
-
-            modelBuilder.Entity("TouristGuide.Domain.Entities.GuideBooking", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("GuideProfileId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("TouristId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GuideProfileId");
-
-                    b.HasIndex("TouristId");
-
-                    b.ToTable("GuideBookings");
-                });
-
-            modelBuilder.Entity("TouristGuide.Domain.Entities.GuideProfile", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Bio")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ExperienceYears")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsVerified")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Languages")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LicenseNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("PricePerDay")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("GuideProfiles");
+                    b.ToTable("GuideWeeklyAvailabilities");
                 });
 
             modelBuilder.Entity("TouristGuide.Domain.Entities.ItineraryItem", b =>
@@ -199,8 +524,18 @@ namespace TouristGuide.Infrastructure.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<TimeSpan>("EndTime")
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<TimeSpan?>("EndTime")
                         .HasColumnType("time");
+
+                    b.Property<decimal?>("EstimatedCost")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("IconType")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -213,6 +548,11 @@ namespace TouristGuide.Infrastructure.Data.Migrations
 
                     b.Property<TimeSpan>("StartTime")
                         .HasColumnType("time");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<int>("TripDayId")
                         .HasColumnType("int");
@@ -248,6 +588,9 @@ namespace TouristGuide.Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("NotificationType")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -274,7 +617,8 @@ namespace TouristGuide.Infrastructure.Data.Migrations
 
                     b.Property<string>("Comment")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -291,7 +635,10 @@ namespace TouristGuide.Infrastructure.Data.Migrations
                     b.Property<int>("ReferenceType")
                         .HasColumnType("int");
 
-                    b.Property<int>("TouristId")
+                    b.Property<DateTime>("ReviewDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TouristProfileId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -299,9 +646,62 @@ namespace TouristGuide.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TouristId");
+                    b.HasIndex("TouristProfileId");
 
                     b.ToTable("Reviews");
+                });
+
+            modelBuilder.Entity("TouristGuide.Domain.Entities.Room", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccommodationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BedCount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MaxOccupancy")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("PricePerNight")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("RoomNumber")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("RoomType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccommodationId");
+
+                    b.ToTable("Rooms");
                 });
 
             modelBuilder.Entity("TouristGuide.Domain.Entities.Service", b =>
@@ -324,7 +724,8 @@ namespace TouristGuide.Infrastructure.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -369,7 +770,7 @@ namespace TouristGuide.Infrastructure.Data.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<int>("TouristId")
+                    b.Property<int>("TouristProfileId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -379,7 +780,7 @@ namespace TouristGuide.Infrastructure.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.HasIndex("TouristId");
+                    b.HasIndex("TouristProfileId");
 
                     b.ToTable("ServiceBookings");
                 });
@@ -422,7 +823,184 @@ namespace TouristGuide.Infrastructure.Data.Migrations
                     b.ToTable("ServiceProviderProfiles");
                 });
 
-            modelBuilder.Entity("TouristGuide.Domain.Entities.Tourist", b =>
+            modelBuilder.Entity("TouristGuide.Domain.Entities.StayBooking", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccommodationId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CheckInDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CheckOutDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("GuestCount")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SpecialRequests")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalNights")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("TouristProfileId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccommodationId");
+
+                    b.HasIndex("RoomId");
+
+                    b.HasIndex("TouristProfileId");
+
+                    b.ToTable("StayBookings");
+                });
+
+            modelBuilder.Entity("TouristGuide.Domain.Entities.Tour", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("AverageRating")
+                        .HasColumnType("decimal(3,2)");
+
+                    b.Property<string>("CoverImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DurationInMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ExperienceType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("GuideProfileId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Languages")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("MaxGroupSize")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("PricePerPerson")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ReviewCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GuideProfileId");
+
+                    b.ToTable("Tours");
+                });
+
+            modelBuilder.Entity("TouristGuide.Domain.Entities.TourBooking", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("BookingDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("GuideProfileId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SpecialRequests")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("TourId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TouristProfileId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TravelerCount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GuideProfileId");
+
+                    b.HasIndex("TourId");
+
+                    b.HasIndex("TouristProfileId");
+
+                    b.ToTable("TourBookings");
+                });
+
+            modelBuilder.Entity("TouristGuide.Domain.Entities.TourItineraryStep", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -433,27 +1011,31 @@ namespace TouristGuide.Infrastructure.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Nationality")
+                    b.Property<int>("StepNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PreferredLanguage")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("TourId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
-                    b.ToTable("Tourists");
+                    b.HasIndex("TourId");
+
+                    b.ToTable("TourItinerarySteps");
                 });
 
             modelBuilder.Entity("TouristGuide.Domain.Entities.TouristPlace", b =>
@@ -464,6 +1046,9 @@ namespace TouristGuide.Infrastructure.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<decimal>("AverageRating")
+                        .HasColumnType("decimal(3,2)");
+
                     b.Property<int>("Category")
                         .HasColumnType("int");
 
@@ -473,6 +1058,11 @@ namespace TouristGuide.Infrastructure.Data.Migrations
 
                     b.Property<TimeSpan>("ClosingTime")
                         .HasColumnType("time");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -491,9 +1081,17 @@ namespace TouristGuide.Infrastructure.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsFeatured")
+                        .HasColumnType("bit");
+
+                    b.Property<double?>("Latitude")
+                        .HasColumnType("float");
+
                     b.Property<string>("LocationUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double?>("Longitude")
+                        .HasColumnType("float");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -503,12 +1101,69 @@ namespace TouristGuide.Infrastructure.Data.Migrations
                     b.Property<TimeSpan>("OpeningTime")
                         .HasColumnType("time");
 
+                    b.Property<int>("ReviewCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Tags")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("ThumbnailUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.ToTable("TouristPlaces");
+                });
+
+            modelBuilder.Entity("TouristGuide.Domain.Entities.TouristProfile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Bio")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DisplayLocation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Nationality")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PreferredLanguage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProfileImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TouristProfiles");
                 });
 
             modelBuilder.Entity("TouristGuide.Domain.Entities.Trip", b =>
@@ -519,21 +1174,29 @@ namespace TouristGuide.Infrastructure.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CoverImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("GuideProfileId")
-                        .HasColumnType("int");
+                    b.Property<string>("EstimatedBudgetPerPerson")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsAiGenerated")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
@@ -541,7 +1204,10 @@ namespace TouristGuide.Infrastructure.Data.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<int>("TouristId")
+                    b.Property<int>("TouristProfileId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TravelerCount")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -549,9 +1215,7 @@ namespace TouristGuide.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GuideProfileId");
-
-                    b.HasIndex("TouristId");
+                    b.HasIndex("TouristProfileId");
 
                     b.ToTable("Trips");
                 });
@@ -573,6 +1237,9 @@ namespace TouristGuide.Infrastructure.Data.Migrations
                     b.Property<int>("DayNumber")
                         .HasColumnType("int");
 
+                    b.Property<string>("DayTitle")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -589,6 +1256,166 @@ namespace TouristGuide.Infrastructure.Data.Migrations
                     b.ToTable("TripDays");
                 });
 
+            modelBuilder.Entity("TouristGuide.Domain.Entities.UserFavorite", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EntityId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EntityType")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("SavedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TouristProfileId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TouristProfileId");
+
+                    b.HasIndex("UserId", "EntityType", "EntityId")
+                        .IsUnique();
+
+                    b.ToTable("UserFavorites");
+                });
+
+            modelBuilder.Entity("TouristGuide.Domain.Entities.UserPreference", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MaxDailyActivities")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PreferredBudgetTier")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PreferredCategories")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("TravelGroupType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TravelStyle")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("UserPreferences");
+                });
+
+            modelBuilder.Entity("TouristGuide.Domain.Entities.UserSettings", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)")
+                        .HasDefaultValue("USD");
+
+                    b.Property<bool>("DarkModeEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasDefaultValue("English");
+
+                    b.Property<bool>("PushNotificationsEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("UserSettings");
+                });
+
+            modelBuilder.Entity("TouristGuide.Domain.Entities.AccommodationAmenity", b =>
+                {
+                    b.HasOne("TouristGuide.Domain.Entities.Accommodation", "Accommodation")
+                        .WithMany("Amenities")
+                        .HasForeignKey("AccommodationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Accommodation");
+                });
+
+            modelBuilder.Entity("TouristGuide.Domain.Entities.AccommodationImage", b =>
+                {
+                    b.HasOne("TouristGuide.Domain.Entities.Accommodation", "Accommodation")
+                        .WithMany("Images")
+                        .HasForeignKey("AccommodationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Accommodation");
+                });
+
             modelBuilder.Entity("TouristGuide.Domain.Entities.Activity", b =>
                 {
                     b.HasOne("TouristGuide.Domain.Entities.TouristPlace", "TouristPlace")
@@ -600,34 +1427,34 @@ namespace TouristGuide.Infrastructure.Data.Migrations
                     b.Navigation("TouristPlace");
                 });
 
-            modelBuilder.Entity("TouristGuide.Domain.Entities.GuideAvailability", b =>
+            modelBuilder.Entity("TouristGuide.Domain.Entities.AiChatMessage", b =>
+                {
+                    b.HasOne("TouristGuide.Domain.Entities.AiChatSession", "Session")
+                        .WithMany("Messages")
+                        .HasForeignKey("SessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Session");
+                });
+
+            modelBuilder.Entity("TouristGuide.Domain.Entities.AiTripRequest", b =>
+                {
+                    b.HasOne("TouristGuide.Domain.Entities.Trip", null)
+                        .WithMany()
+                        .HasForeignKey("GeneratedTripId")
+                        .OnDelete(DeleteBehavior.SetNull);
+                });
+
+            modelBuilder.Entity("TouristGuide.Domain.Entities.GuideWeeklyAvailability", b =>
                 {
                     b.HasOne("TouristGuide.Domain.Entities.GuideProfile", "GuideProfile")
-                        .WithMany("Availabilities")
+                        .WithMany("WeeklyAvailabilities")
                         .HasForeignKey("GuideProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("GuideProfile");
-                });
-
-            modelBuilder.Entity("TouristGuide.Domain.Entities.GuideBooking", b =>
-                {
-                    b.HasOne("TouristGuide.Domain.Entities.GuideProfile", "GuideProfile")
-                        .WithMany("Bookings")
-                        .HasForeignKey("GuideProfileId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("TouristGuide.Domain.Entities.Tourist", "Tourist")
-                        .WithMany("GuideBookings")
-                        .HasForeignKey("TouristId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("GuideProfile");
-
-                    b.Navigation("Tourist");
                 });
 
             modelBuilder.Entity("TouristGuide.Domain.Entities.ItineraryItem", b =>
@@ -643,13 +1470,24 @@ namespace TouristGuide.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("TouristGuide.Domain.Entities.Review", b =>
                 {
-                    b.HasOne("TouristGuide.Domain.Entities.Tourist", "Tourist")
+                    b.HasOne("TouristGuide.Domain.Entities.TouristProfile", "TouristProfile")
                         .WithMany("Reviews")
-                        .HasForeignKey("TouristId")
+                        .HasForeignKey("TouristProfileId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("TouristProfile");
+                });
+
+            modelBuilder.Entity("TouristGuide.Domain.Entities.Room", b =>
+                {
+                    b.HasOne("TouristGuide.Domain.Entities.Accommodation", "Accommodation")
+                        .WithMany("Rooms")
+                        .HasForeignKey("AccommodationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Tourist");
+                    b.Navigation("Accommodation");
                 });
 
             modelBuilder.Entity("TouristGuide.Domain.Entities.Service", b =>
@@ -671,30 +1509,98 @@ namespace TouristGuide.Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("TouristGuide.Domain.Entities.Tourist", "Tourist")
+                    b.HasOne("TouristGuide.Domain.Entities.TouristProfile", "TouristProfile")
                         .WithMany("ServiceBookings")
-                        .HasForeignKey("TouristId")
+                        .HasForeignKey("TouristProfileId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Service");
 
-                    b.Navigation("Tourist");
+                    b.Navigation("TouristProfile");
+                });
+
+            modelBuilder.Entity("TouristGuide.Domain.Entities.StayBooking", b =>
+                {
+                    b.HasOne("TouristGuide.Domain.Entities.Accommodation", "Accommodation")
+                        .WithMany("StayBookings")
+                        .HasForeignKey("AccommodationId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("TouristGuide.Domain.Entities.Room", "Room")
+                        .WithMany("StayBookings")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TouristGuide.Domain.Entities.TouristProfile", "TouristProfile")
+                        .WithMany("StayBookings")
+                        .HasForeignKey("TouristProfileId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Accommodation");
+
+                    b.Navigation("Room");
+
+                    b.Navigation("TouristProfile");
+                });
+
+            modelBuilder.Entity("TouristGuide.Domain.Entities.Tour", b =>
+                {
+                    b.HasOne("TouristGuide.Domain.Entities.GuideProfile", "GuideProfile")
+                        .WithMany("Tours")
+                        .HasForeignKey("GuideProfileId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("GuideProfile");
+                });
+
+            modelBuilder.Entity("TouristGuide.Domain.Entities.TourBooking", b =>
+                {
+                    b.HasOne("TouristGuide.Domain.Entities.GuideProfile", null)
+                        .WithMany("TourBookings")
+                        .HasForeignKey("GuideProfileId");
+
+                    b.HasOne("TouristGuide.Domain.Entities.Tour", "Tour")
+                        .WithMany("TourBookings")
+                        .HasForeignKey("TourId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TouristGuide.Domain.Entities.TouristProfile", "TouristProfile")
+                        .WithMany("TourBookings")
+                        .HasForeignKey("TouristProfileId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tour");
+
+                    b.Navigation("TouristProfile");
+                });
+
+            modelBuilder.Entity("TouristGuide.Domain.Entities.TourItineraryStep", b =>
+                {
+                    b.HasOne("TouristGuide.Domain.Entities.Tour", "Tour")
+                        .WithMany("ItinerarySteps")
+                        .HasForeignKey("TourId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tour");
                 });
 
             modelBuilder.Entity("TouristGuide.Domain.Entities.Trip", b =>
                 {
-                    b.HasOne("TouristGuide.Domain.Entities.GuideProfile", null)
+                    b.HasOne("TouristGuide.Domain.Entities.TouristProfile", "TouristProfile")
                         .WithMany("Trips")
-                        .HasForeignKey("GuideProfileId");
-
-                    b.HasOne("TouristGuide.Domain.Entities.Tourist", "Tourist")
-                        .WithMany("Trips")
-                        .HasForeignKey("TouristId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("TouristProfileId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Tourist");
+                    b.Navigation("TouristProfile");
                 });
 
             modelBuilder.Entity("TouristGuide.Domain.Entities.TripDay", b =>
@@ -708,13 +1614,45 @@ namespace TouristGuide.Infrastructure.Data.Migrations
                     b.Navigation("Trip");
                 });
 
+            modelBuilder.Entity("TouristGuide.Domain.Entities.UserFavorite", b =>
+                {
+                    b.HasOne("TouristGuide.Domain.Entities.TouristProfile", "TouristProfile")
+                        .WithMany("Favorites")
+                        .HasForeignKey("TouristProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TouristProfile");
+                });
+
+            modelBuilder.Entity("TouristGuide.Domain.Entities.Accommodation", b =>
+                {
+                    b.Navigation("Amenities");
+
+                    b.Navigation("Images");
+
+                    b.Navigation("Rooms");
+
+                    b.Navigation("StayBookings");
+                });
+
+            modelBuilder.Entity("TouristGuide.Domain.Entities.AiChatSession", b =>
+                {
+                    b.Navigation("Messages");
+                });
+
             modelBuilder.Entity("TouristGuide.Domain.Entities.GuideProfile", b =>
                 {
-                    b.Navigation("Availabilities");
+                    b.Navigation("TourBookings");
 
-                    b.Navigation("Bookings");
+                    b.Navigation("Tours");
 
-                    b.Navigation("Trips");
+                    b.Navigation("WeeklyAvailabilities");
+                });
+
+            modelBuilder.Entity("TouristGuide.Domain.Entities.Room", b =>
+                {
+                    b.Navigation("StayBookings");
                 });
 
             modelBuilder.Entity("TouristGuide.Domain.Entities.Service", b =>
@@ -727,20 +1665,31 @@ namespace TouristGuide.Infrastructure.Data.Migrations
                     b.Navigation("Services");
                 });
 
-            modelBuilder.Entity("TouristGuide.Domain.Entities.Tourist", b =>
+            modelBuilder.Entity("TouristGuide.Domain.Entities.Tour", b =>
                 {
-                    b.Navigation("GuideBookings");
+                    b.Navigation("ItinerarySteps");
 
-                    b.Navigation("Reviews");
-
-                    b.Navigation("ServiceBookings");
-
-                    b.Navigation("Trips");
+                    b.Navigation("TourBookings");
                 });
 
             modelBuilder.Entity("TouristGuide.Domain.Entities.TouristPlace", b =>
                 {
                     b.Navigation("Activities");
+                });
+
+            modelBuilder.Entity("TouristGuide.Domain.Entities.TouristProfile", b =>
+                {
+                    b.Navigation("Favorites");
+
+                    b.Navigation("Reviews");
+
+                    b.Navigation("ServiceBookings");
+
+                    b.Navigation("StayBookings");
+
+                    b.Navigation("TourBookings");
+
+                    b.Navigation("Trips");
                 });
 
             modelBuilder.Entity("TouristGuide.Domain.Entities.Trip", b =>

@@ -10,6 +10,10 @@ namespace TouristGuide.Infrastructure.Data.Configurations
         {
             builder.Property(s => s.Price)
                    .HasColumnType("decimal(18,2)");
+
+            builder.Property(s => s.Name)
+                   .HasMaxLength(200)
+                   .IsRequired();
         }
     }
 }

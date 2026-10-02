@@ -4,6 +4,8 @@
     {
         Place,
         Guide,
-        Service
+        Service,
+        Accommodation,
+        Tour
     }
 }

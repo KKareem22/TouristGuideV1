@@ -3,14 +3,15 @@ using TouristGuide.Domain.Enums;
 
 namespace TouristGuide.Domain.Entities
 {
-    public class Review:BaseEntity<int>
+    public class Review : BaseEntity<int>
     {
         public ReferenceType ReferenceType { get; set; }
         public int ReferenceId { get; set; }
         public int Rating { get; set; }
         public string Comment { get; set; } = string.Empty;
+        public DateTime ReviewDate { get; set; } = DateTime.UtcNow;
 
-        public int TouristId { get; set; }
-        public Tourist Tourist { get; set; } = null!;
+        public int TouristProfileId { get; set; }
+        public TouristProfile TouristProfile { get; set; } = null!;
     }
 }

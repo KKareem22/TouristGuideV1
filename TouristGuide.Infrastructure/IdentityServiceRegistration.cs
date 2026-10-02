@@ -15,14 +15,14 @@ namespace TouristGuide.Infrastructure
     {
         public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration configuration)
         {
-            // 1. Bind JwtSettings from appsettings.json
+            // 1. Bind JwtSettings
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
-            // 2. Register the Identity DbContext
+            // 2. Identity DbContext
             services.AddDbContext<AppIdentityDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("IdentityConnection")));
 
-            // 3. Configure ASP.NET Core Identity
+            // 3. ASP.NET Core Identity with role support
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 options.Password.RequireDigit           = true;
@@ -34,7 +34,7 @@ namespace TouristGuide.Infrastructure
             .AddEntityFrameworkStores<AppIdentityDbContext>()
             .AddDefaultTokenProviders();
 
-            // 4. Configure JWT Bearer authentication
+            // 4. JWT Bearer
             var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>()!;
             var key = Encoding.UTF8.GetBytes(jwtSettings.Key);
 
@@ -54,7 +54,7 @@ namespace TouristGuide.Infrastructure
                     ValidateAudience         = true,
                     ValidAudience            = jwtSettings.Audience,
                     ValidateLifetime         = true,
-                    ClockSkew                = TimeSpan.Zero   // no tolerance — token expires exactly on time
+                    ClockSkew                = TimeSpan.Zero
                 };
             });
 
