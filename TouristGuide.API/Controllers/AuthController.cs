@@ -7,7 +7,7 @@ namespace TouristGuide.API.Controllers
     //https://localhost:7257/
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class AuthController : BaseApiController
     {
         private readonly IAuthService _authService;
 
