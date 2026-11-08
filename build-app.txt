@@ -1,0 +1,10 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  TouristGuide.Domain -> C:\Users\Dell\source\repos\TouristGuide\TouristGuide.Domain\bin\Debug\net8.0\TouristGuide.Domain.dll
+  TouristGuide.Application -> C:\Users\Dell\source\repos\TouristGuide\TouristGuide.Application\bin\Debug\net8.0\TouristGuide.Application.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:06.18

@@ -1,29 +1,48 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TouristGuide.Application.DTOs.Profile;
 using TouristGuide.Application.DTOs.Settings;
 using TouristGuide.Application.Interfaces;
 
 namespace TouristGuide.API.Controllers
 {
-    /// <summary>
-    /// Handles the authenticated user's personal Settings screen.
-    /// Applies to both Tourist and TourGuide roles.
-    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
     public class ProfileController : BaseApiController
     {
+        private readonly IProfileService      _profileService;
         private readonly IUserSettingsService _settingsService;
 
-        public ProfileController(IUserSettingsService settingsService)
+        public ProfileController(
+            IProfileService      profileService,
+            IUserSettingsService settingsService)
         {
+            _profileService  = profileService;
             _settingsService = settingsService;
         }
 
+        // GET: api/Profile
+        // Returns the authenticated user's comprehensive profile:
+        // Identity data, role, domain profile (Tourist or Guide), AI preferences, and app settings.
+        [HttpGet]
+        [ProducesResponseType(typeof(UserProfileDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetProfile()
+        {
+            try
+            {
+                var profile = await _profileService.GetFullProfileAsync(GetCurrentUserId());
+                return Ok(profile);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
         // GET: api/Profile/settings
-        // Returns the authenticated user's app settings.
-        // Auto-creates default settings (EN, USD, push on, dark mode off) on first call.
+        // Returns only the authenticated user's app settings (lightweight).
         [HttpGet("settings")]
         [ProducesResponseType(typeof(UserSettingsDto), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetSettings()

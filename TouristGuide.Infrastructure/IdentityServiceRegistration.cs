@@ -58,8 +58,9 @@ namespace TouristGuide.Infrastructure
                 };
             });
 
-            // 5. Register AuthService
-            services.AddScoped<IAuthService, AuthService>();
+            // 5. Register AuthService + ProfileService
+            services.AddScoped<IAuthService,    AuthService>();
+            services.AddScoped<IProfileService, ProfileService>();
 
             return services;
         }

@@ -1,16 +1,35 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using TouristGuide.Application;
+using TouristGuide.API.Middleware;
 using TouristGuide.Infrastructure;
-using TouristGuide.Infrastructure.Identity;
+using TouristGuide.Infrastructure.Data;
 
 namespace TouristGuide.API
 {
     public class Program
     {
+        private const string CorsPolicyName = "AllowAll";
+
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // ── Global exception handling (must be registered before building the app) ──
+            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+            builder.Services.AddProblemDetails(); // required by AddExceptionHandler
+
+            // ── CORS ──────────────────────────────────────────────────────────
+            // "AllowAll" — permissive policy for Flutter mobile client.
+            // Allows any origin, method, and header (including Authorization).
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(CorsPolicyName, policy =>
+                    policy.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader());
+            });
 
             // ── Layer service registrations ───────────────────────────────────
             builder.Services.AddControllers();
@@ -26,12 +45,12 @@ namespace TouristGuide.API
 
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Name         = "Authorization",
-                    Type         = SecuritySchemeType.Http,
-                    Scheme       = "Bearer",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "Bearer",
                     BearerFormat = "JWT",
-                    In           = ParameterLocation.Header,
-                    Description  = "Enter your JWT token. Example: Bearer {token}"
+                    In = ParameterLocation.Header,
+                    Description = "Enter your JWT token. Example: Bearer {token}"
                 });
 
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -39,7 +58,11 @@ namespace TouristGuide.API
                     {
                         new OpenApiSecurityScheme
                         {
-                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id   = "Bearer"
+                            }
                         },
                         Array.Empty<string>()
                     }
@@ -60,7 +83,29 @@ namespace TouristGuide.API
                 }
             }
 
-            // ── HTTP pipeline ─────────────────────────────────────────────────
+            // ── Seed database with Egyptian tourist data ───────────────────────
+            using (var scope = app.Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                var seederLogger = scope.ServiceProvider
+                    .GetRequiredService<ILogger<Program>>();
+                await DatabaseSeeder.SeedAsync(dbContext, seederLogger);
+            }
+
+            // ── HTTP pipeline (order is mandatory) ────────────────────────────
+            //
+            //  1. UseExceptionHandler  — wraps everything below; must be outermost
+            //  2. UseCors              — before auth so OPTIONS preflight is never rejected
+            //  3. UseSwagger           — dev tooling
+            //  4. UseHttpsRedirection  — redirect before any real work
+            //  5. UseAuthentication    — validate JWT
+            //  6. UseAuthorization     — apply [Authorize] policies
+            //  7. MapControllers       — route to action methods
+
+            app.UseExceptionHandler();   // uses GlobalExceptionHandler registered above
+
+            app.UseCors(CorsPolicyName);
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -69,7 +114,7 @@ namespace TouristGuide.API
 
             app.UseHttpsRedirection();
 
-            app.UseAuthentication();   // ← must come before UseAuthorization
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
