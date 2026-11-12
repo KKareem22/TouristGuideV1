@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using TouristGuide.Application;
 using TouristGuide.API.Middleware;
 using TouristGuide.Infrastructure;
 using TouristGuide.Infrastructure.Data;
+using TouristGuide.Infrastructure.Identity;
 
 namespace TouristGuide.API
 {
@@ -72,10 +74,21 @@ namespace TouristGuide.API
             // ─────────────────────────────────────────────────────────────────
             var app = builder.Build();
 
-            // ── Seed Identity roles on startup ────────────────────────────────
+            // ── Step 1: Migrate Identity DB → then seed roles ─────────────────
+            // هذا الـ scope يعمل المهمتين اللي بتتوقف الثانية على الأولى:
+            //   (a) MigrateAsync على AppIdentityDbContext يضمن إن جداول الـ Identity
+            //       (AspNetRoles, AspNetUsers, ...) اتكريتت على كلاود DB الفاضية.
+            //   (b) RoleManager يكريت الـ Roles بعد كده بأمان لأن الجداول موجودة.
             using (var scope = app.Services.CreateScope())
             {
-                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                // (a) تطبيق أي migrations معلقة على داتابيز الـ Identity
+                var identityDb = scope.ServiceProvider
+                    .GetRequiredService<AppIdentityDbContext>();
+                await identityDb.Database.MigrateAsync();
+
+                // (b) إنشاء الـ Roles لو مش موجودة
+                var roleManager = scope.ServiceProvider
+                    .GetRequiredService<RoleManager<IdentityRole>>();
                 foreach (var role in new[] { "Tourist", "TourGuide" })
                 {
                     if (!await roleManager.RoleExistsAsync(role))
@@ -106,11 +119,11 @@ namespace TouristGuide.API
 
             app.UseCors(CorsPolicyName);
 
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+            
+            
+            app.UseSwagger();
+            app.UseSwaggerUI();
+            
 
             app.UseHttpsRedirection();
 
