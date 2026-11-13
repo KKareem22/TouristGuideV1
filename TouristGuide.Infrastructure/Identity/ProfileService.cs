@@ -167,5 +167,72 @@ namespace TouristGuide.Infrastructure.Identity
                 CoverImageUrl  = guide.CoverImageUrl
             };
         }
+
+
+
+        public async Task<UserProfileDto> UpdateProfileAsync(string userId, UpdateProfileDto dto)
+        {
+            // ── 1. تحديث الاسم ورقم الهاتف في جدول الـ Identity ───────────────
+            var user = await _userManager.FindByIdAsync(userId)
+                       ?? throw new KeyNotFoundException($"User '{userId}' not found.");
+
+            if (!string.IsNullOrWhiteSpace(dto.FirstName))
+                user.FirstName = dto.FirstName.Trim();
+
+            if (!string.IsNullOrWhiteSpace(dto.LastName))
+                user.LastName = dto.LastName.Trim();
+
+            if (!string.IsNullOrWhiteSpace(dto.PhoneNumber))
+                user.PhoneNumber = dto.PhoneNumber.Trim();
+
+            var identityResult = await _userManager.UpdateAsync(user);
+            if (!identityResult.Succeeded)
+            {
+                var errors = string.Join(", ", identityResult.Errors.Select(e => e.Description));
+                throw new InvalidOperationException($"Failed to update user: {errors}");
+            }
+
+            // ── 2. تحديث الـ Bio والـ Location حسب نوع اليوزر (Tourist أو TourGuide)
+            var roles = await _userManager.GetRolesAsync(user);
+            var role = roles.FirstOrDefault() ?? string.Empty;
+
+            if (role == "Tourist")
+            {
+                var profileRepo = _uow.GetRepository<TouristProfile, int>();
+                var allProfiles = await profileRepo.GetAllAsync();
+                var profile = allProfiles.FirstOrDefault(p => p.UserId == userId);
+
+                if (profile is not null)
+                {
+                    if (dto.Bio is not null)
+                        profile.Bio = dto.Bio.Trim();
+
+                    if (dto.Location is not null)
+                        profile.DisplayLocation = dto.Location.Trim(); // اسمها DisplayLocation في TouristProfile
+
+                    await _uow.SaveChangesAsync();
+                }
+            }
+            else if (role == "TourGuide")
+            {
+                var guideRepo = _uow.GetRepository<GuideProfile, int>();
+                var allGuides = await guideRepo.GetAllAsync();
+                var guide = allGuides.FirstOrDefault(g => g.UserId == userId && !g.IsDeleted);
+
+                if (guide is not null)
+                {
+                    if (dto.Bio is not null)
+                        guide.Bio = dto.Bio.Trim();
+
+                    if (dto.Location is not null)
+                        guide.Location = dto.Location.Trim(); // اسمها Location في GuideProfile
+
+                    await _uow.SaveChangesAsync();
+                }
+            }
+
+            // ── 3. نرجع البروفايل كامل بعد التحديث عشان الفرونت يحدث الشاشة فوراً
+            return await GetFullProfileAsync(userId);
+        }
     }
 }

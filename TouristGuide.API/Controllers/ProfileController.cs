@@ -69,5 +69,28 @@ namespace TouristGuide.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        // PUT: api/Profile
+        // Updates the authenticated user's profile (FirstName, LastName, PhoneNumber, Bio, Location).
+        [HttpPut]
+        [ProducesResponseType(typeof(UserProfileDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileDto dto)
+        {
+            try
+            {
+                var updatedProfile = await _profileService.UpdateProfileAsync(GetCurrentUserId(), dto);
+                return Ok(updatedProfile);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

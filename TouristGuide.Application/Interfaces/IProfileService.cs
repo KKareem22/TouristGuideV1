@@ -18,5 +18,6 @@ namespace TouristGuide.Application.Interfaces
         /// Throws <see cref="KeyNotFoundException"/> when the user does not exist.
         /// </summary>
         Task<UserProfileDto> GetFullProfileAsync(string userId);
+        Task<UserProfileDto> UpdateProfileAsync(string userId, UpdateProfileDto dto);
     }
 }
