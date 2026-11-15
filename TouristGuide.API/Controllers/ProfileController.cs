@@ -11,20 +11,21 @@ namespace TouristGuide.API.Controllers
     [Authorize]
     public class ProfileController : BaseApiController
     {
-        private readonly IProfileService      _profileService;
+        private readonly IProfileService _profileService;
         private readonly IUserSettingsService _settingsService;
+        private readonly IWebHostEnvironment _env;
 
         public ProfileController(
-            IProfileService      profileService,
-            IUserSettingsService settingsService)
+            IProfileService profileService,
+            IUserSettingsService settingsService,
+            IWebHostEnvironment env)
         {
-            _profileService  = profileService;
+            _profileService = profileService;
             _settingsService = settingsService;
+            _env = env;
         }
 
         // GET: api/Profile
-        // Returns the authenticated user's comprehensive profile:
-        // Identity data, role, domain profile (Tourist or Guide), AI preferences, and app settings.
         [HttpGet]
         [ProducesResponseType(typeof(UserProfileDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -42,7 +43,6 @@ namespace TouristGuide.API.Controllers
         }
 
         // GET: api/Profile/settings
-        // Returns only the authenticated user's app settings (lightweight).
         [HttpGet("settings")]
         [ProducesResponseType(typeof(UserSettingsDto), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetSettings()
@@ -52,8 +52,6 @@ namespace TouristGuide.API.Controllers
         }
 
         // PUT: api/Profile/settings
-        // Updates the authenticated user's app settings.
-        // Body: { pushNotificationsEnabled, darkModeEnabled, language, currency }
         [HttpPut("settings")]
         [ProducesResponseType(typeof(UserSettingsDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -71,15 +69,33 @@ namespace TouristGuide.API.Controllers
         }
 
         // PUT: api/Profile
-        // Updates the authenticated user's profile (FirstName, LastName, PhoneNumber, Bio, Location).
+        // Accepts multipart/form-data (FirstName, LastName, PhoneNumber, Bio, Location, ProfileImage)
         [HttpPut]
+        [Consumes("multipart/form-data")]
         [ProducesResponseType(typeof(UserProfileDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileDto dto)
+        public async Task<IActionResult> UpdateProfile([FromForm] UpdateProfileRequest request)
         {
             try
             {
+                string? imageUrl = null;
+
+                if (request.ProfileImage is not null && request.ProfileImage.Length > 0)
+                {
+                    imageUrl = await SaveProfileImageAsync(request.ProfileImage);
+                }
+
+                var dto = new UpdateProfileDto
+                {
+                    FirstName = request.FirstName,
+                    LastName = request.LastName,
+                    PhoneNumber = request.PhoneNumber,
+                    Bio = request.Bio,
+                    Location = request.Location,
+                    ProfileImageUrl = imageUrl
+                };
+
                 var updatedProfile = await _profileService.UpdateProfileAsync(GetCurrentUserId(), dto);
                 return Ok(updatedProfile);
             }
@@ -92,5 +108,39 @@ namespace TouristGuide.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        private async Task<string> SaveProfileImageAsync(IFormFile file)
+        {
+            const long maxFileSize = 5 * 1024 * 1024; // 5 MB
+            if (file.Length > maxFileSize)
+                throw new InvalidOperationException("Image size cannot exceed 5 MB.");
+
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+            var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+            if (!allowedExtensions.Contains(extension))
+                throw new InvalidOperationException("Only .jpg, .jpeg, .png, and .webp images are allowed.");
+
+            var webRoot = _env.WebRootPath ?? Path.Combine(_env.ContentRootPath, "wwwroot");
+            var uploadsFolder = Path.Combine(webRoot, "uploads", "profiles");
+            Directory.CreateDirectory(uploadsFolder);
+
+            var fileName = $"{Guid.NewGuid()}{extension}";
+            var filePath = Path.Combine(uploadsFolder, fileName);
+
+            await using var stream = new FileStream(filePath, FileMode.Create);
+            await file.CopyToAsync(stream);
+
+            return $"{Request.Scheme}://{Request.Host}/uploads/profiles/{fileName}";
+        }
+    }
+
+    public class UpdateProfileRequest
+    {
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public string? PhoneNumber { get; set; }
+        public string? Bio { get; set; }
+        public string? Location { get; set; }
+        public IFormFile? ProfileImage { get; set; }
     }
 }

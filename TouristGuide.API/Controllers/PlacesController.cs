@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TouristGuide.Application.Common;
 using TouristGuide.Application.DTOs.Place;
 using TouristGuide.Application.Interfaces;
 
@@ -17,16 +18,14 @@ namespace TouristGuide.API.Controllers
         }
 
         // GET: api/Places
-        // Optional query: ?category=Beaches&featured=true
+        // Optional query: ?category=Beaches&featured=true&pageIndex=1&pageSize=10
         [HttpGet]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(IReadOnlyList<TouristPlaceDto>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAll(
-            [FromQuery] string? category = null,
-            [FromQuery] bool?   featured = null)
+        [ProducesResponseType(typeof(PagedResult<TouristPlaceDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAll([FromQuery] PlaceSpecParams specParams)
         {
-            var places = await _placeService.GetAllAsync(category, featured);
-            return Ok(places);
+            var result = await _placeService.GetAllAsync(specParams);
+            return Ok(result);
         }
 
         // GET: api/Places/{id}

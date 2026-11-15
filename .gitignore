@@ -364,3 +364,4 @@ FodyWeavers.xsd
 
 # Ignore local appsettings files to protect secrets (API keys, connection strings)
 **/appsettings.json
+/TouristGuide.API/wwwroot/uploads/

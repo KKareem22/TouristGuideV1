@@ -5,7 +5,6 @@ using TouristGuide.Application.DTOs.Profile;
 using TouristGuide.Application.DTOs.Settings;
 using TouristGuide.Application.Interfaces;
 using TouristGuide.Domain.Entities;
-using TouristGuide.Domain.Enums;
 using TouristGuide.Domain.Interfaces;
 
 namespace TouristGuide.Infrastructure.Identity
@@ -24,12 +23,12 @@ namespace TouristGuide.Infrastructure.Identity
     public class ProfileService : IProfileService
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IUnitOfWork                  _uow;
+        private readonly IUnitOfWork _uow;
 
         public ProfileService(UserManager<ApplicationUser> userManager, IUnitOfWork uow)
         {
             _userManager = userManager;
-            _uow         = uow;
+            _uow = uow;
         }
 
         public async Task<UserProfileDto> GetFullProfileAsync(string userId)
@@ -40,12 +39,12 @@ namespace TouristGuide.Infrastructure.Identity
 
             // ── 2. Role ──────────────────────────────────────────────────────
             var roles = await _userManager.GetRolesAsync(user);
-            var role  = roles.FirstOrDefault() ?? string.Empty; // Tourist | TourGuide
+            var role = roles.FirstOrDefault() ?? string.Empty; // Tourist | TourGuide
 
             // ── 3. App settings (auto-created if missing) ────────────────────
             var settingsRepo = _uow.GetRepository<UserSettings, int>();
-            var allSettings  = await settingsRepo.GetAllAsync();
-            var settings     = allSettings.FirstOrDefault(s => s.UserId == userId);
+            var allSettings = await settingsRepo.GetAllAsync();
+            var settings = allSettings.FirstOrDefault(s => s.UserId == userId);
 
             if (settings is null)
             {
@@ -57,23 +56,23 @@ namespace TouristGuide.Infrastructure.Identity
             var settingsDto = new UserSettingsDto
             {
                 PushNotificationsEnabled = settings.PushNotificationsEnabled,
-                DarkModeEnabled          = settings.DarkModeEnabled,
-                Language                 = settings.Language,
-                Currency                 = settings.Currency
+                DarkModeEnabled = settings.DarkModeEnabled,
+                Language = settings.Language,
+                Currency = settings.Currency
             };
 
             // ── 4. Build base DTO ────────────────────────────────────────────
             var dto = new UserProfileDto
             {
-                UserId           = user.Id,
-                FirstName        = user.FirstName,
-                LastName         = user.LastName,
-                FullName         = $"{user.FirstName} {user.LastName}".Trim(),
-                Email            = user.Email ?? string.Empty,
-                PhoneNumber      = user.PhoneNumber,
+                UserId = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                FullName = $"{user.FirstName} {user.LastName}".Trim(),
+                Email = user.Email ?? string.Empty,
+                PhoneNumber = user.PhoneNumber,
                 IsEmailConfirmed = user.EmailConfirmed,
-                Role             = role,
-                Settings         = settingsDto
+                Role = role,
+                Settings = settingsDto
             };
 
             // ── 5. Role-specific enrichment ──────────────────────────────────
@@ -98,7 +97,7 @@ namespace TouristGuide.Infrastructure.Identity
             // Domain profile
             var profileRepo = _uow.GetRepository<TouristProfile, int>();
             var allProfiles = await profileRepo.GetAllAsync();
-            var profile     = allProfiles.FirstOrDefault(p => p.UserId == userId);
+            var profile = allProfiles.FirstOrDefault(p => p.UserId == userId);
 
             if (profile is not null)
             {
@@ -106,22 +105,22 @@ namespace TouristGuide.Infrastructure.Identity
 
                 dto.TouristProfile = new TouristProfileSummaryDto
                 {
-                    Id               = profile.Id,
-                    DisplayLocation  = profile.DisplayLocation,
-                    Bio              = profile.Bio,
-                    Nationality      = profile.Nationality,
+                    Id = profile.Id,
+                    DisplayLocation = profile.DisplayLocation,
+                    Bio = profile.Bio,
+                    Nationality = profile.Nationality,
                     PreferredLanguage = profile.PreferredLanguage,
-                    DateOfBirth      = profile.DateOfBirth,
-                    TotalTrips       = profile.Trips.Count,
-                    TotalFavorites   = profile.Favorites.Count,
-                    TotalReviews     = profile.Reviews.Count
+                    DateOfBirth = profile.DateOfBirth,
+                    TotalTrips = profile.Trips.Count,
+                    TotalFavorites = profile.Favorites.Count,
+                    TotalReviews = profile.Reviews.Count
                 };
             }
 
             // AI preferences
             var prefRepo = _uow.GetRepository<UserPreference, int>();
             var allPrefs = await prefRepo.GetAllAsync();
-            var pref     = allPrefs.FirstOrDefault(p => p.UserId == userId);
+            var pref = allPrefs.FirstOrDefault(p => p.UserId == userId);
 
             dto.Preferences = pref is null
                 ? new UserPreferenceDto()
@@ -129,9 +128,9 @@ namespace TouristGuide.Infrastructure.Identity
                 {
                     PreferredCategories = pref.PreferredCategories,
                     PreferredBudgetTier = pref.PreferredBudgetTier,
-                    TravelStyle         = pref.TravelStyle,
-                    TravelGroupType     = pref.TravelGroupType.ToString(),
-                    MaxDailyActivities  = pref.MaxDailyActivities
+                    TravelStyle = pref.TravelStyle,
+                    TravelGroupType = pref.TravelGroupType.ToString(),
+                    MaxDailyActivities = pref.MaxDailyActivities
                 };
         }
 
@@ -143,7 +142,7 @@ namespace TouristGuide.Infrastructure.Identity
         {
             var guideRepo = _uow.GetRepository<GuideProfile, int>();
             var allGuides = await guideRepo.GetAllAsync();
-            var guide     = allGuides.FirstOrDefault(g => g.UserId == userId && !g.IsDeleted);
+            var guide = allGuides.FirstOrDefault(g => g.UserId == userId && !g.IsDeleted);
 
             if (guide is null) return;
 
@@ -151,20 +150,20 @@ namespace TouristGuide.Infrastructure.Identity
 
             dto.GuideProfile = new GuideProfileDto
             {
-                Id             = guide.Id,
-                UserId         = guide.UserId,
-                Bio            = guide.Bio,
-                Location       = guide.Location,
-                Languages      = guide.Languages,
-                Specialties    = guide.Specialties,
-                IsVerified     = guide.IsVerified,
+                Id = guide.Id,
+                UserId = guide.UserId,
+                Bio = guide.Bio,
+                Location = guide.Location,
+                Languages = guide.Languages,
+                Specialties = guide.Specialties,
+                IsVerified = guide.IsVerified,
                 ExperienceYears = guide.ExperienceYears,
                 HappyTravelers = guide.HappyTravelers,
-                AverageRating  = guide.AverageRating,
-                ReviewCount    = guide.ReviewCount,
+                AverageRating = guide.AverageRating,
+                ReviewCount = guide.ReviewCount,
                 PricePerPerson = guide.PricePerPerson,
                 ProfileImageUrl = guide.ProfileImageUrl,
-                CoverImageUrl  = guide.CoverImageUrl
+                CoverImageUrl = guide.CoverImageUrl
             };
         }
 
@@ -204,11 +203,14 @@ namespace TouristGuide.Infrastructure.Identity
 
                 if (profile is not null)
                 {
-                    if (dto.Bio is not null)
+                    if (!string.IsNullOrWhiteSpace(dto.Bio))
                         profile.Bio = dto.Bio.Trim();
 
-                    if (dto.Location is not null)
-                        profile.DisplayLocation = dto.Location.Trim(); // اسمها DisplayLocation في TouristProfile
+                    if (!string.IsNullOrWhiteSpace(dto.Location))
+                        profile.DisplayLocation = dto.Location.Trim();
+
+                    if (!string.IsNullOrWhiteSpace(dto.ProfileImageUrl))
+                        profile.ProfileImageUrl = dto.ProfileImageUrl.Trim();
 
                     await _uow.SaveChangesAsync();
                 }
@@ -221,11 +223,14 @@ namespace TouristGuide.Infrastructure.Identity
 
                 if (guide is not null)
                 {
-                    if (dto.Bio is not null)
+                    if (!string.IsNullOrWhiteSpace(dto.Bio))
                         guide.Bio = dto.Bio.Trim();
 
-                    if (dto.Location is not null)
-                        guide.Location = dto.Location.Trim(); // اسمها Location في GuideProfile
+                    if (!string.IsNullOrWhiteSpace(dto.Location))
+                        guide.Location = dto.Location.Trim();
+
+                    if (!string.IsNullOrWhiteSpace(dto.ProfileImageUrl))
+                        guide.ProfileImageUrl = dto.ProfileImageUrl.Trim();
 
                     await _uow.SaveChangesAsync();
                 }

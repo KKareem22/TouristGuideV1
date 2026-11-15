@@ -1,5 +1,7 @@
+using TouristGuide.Application.Common;
 using TouristGuide.Application.DTOs.Place;
 using TouristGuide.Application.Interfaces;
+using TouristGuide.Application.Specification;
 using TouristGuide.Domain.Entities;
 using TouristGuide.Domain.Enums;
 using TouristGuide.Domain.Interfaces;
@@ -12,18 +14,23 @@ namespace TouristGuide.Application.Services
 
         public TouristPlaceService(IUnitOfWork uow) => _uow = uow;
 
-        public async Task<IReadOnlyList<TouristPlaceDto>> GetAllAsync(string? category = null, bool? featured = null)
+        public async Task<PagedResult<TouristPlaceDto>> GetAllAsync(PlaceSpecParams specParams)
         {
             var repo = _uow.GetRepository<TouristPlace, int>();
-            var all = await repo.GetAllAsync();
 
-            var filtered = all.Where(p => !p.IsDeleted);
-            if (!string.IsNullOrEmpty(category) && Enum.TryParse<PlaceCategory>(category, true, out var cat))
-                filtered = filtered.Where(p => p.Category == cat);
-            if (featured.HasValue)
-                filtered = filtered.Where(p => p.IsFeatured == featured.Value);
+            var spec = new TouristPlaceSpecification(specParams, applyPagination: true);
+            var countSpec = new TouristPlaceSpecification(specParams, applyPagination: false);
 
-            return filtered.Select(MapToDto).ToList();
+            var places = await repo.GetAllAsync(spec);
+            var totalCount = await repo.CountAsync(countSpec);
+
+            return new PagedResult<TouristPlaceDto>
+            {
+                PageIndex = specParams.PageIndex,
+                PageSize = specParams.PageSize,
+                TotalCount = totalCount,
+                Data = places.Select(MapToDto).ToList()
+            };
         }
 
         public async Task<TouristPlaceDto?> GetByIdAsync(int id)

@@ -127,6 +127,10 @@ namespace TouristGuide.API
 
             app.UseHttpsRedirection();
 
+            var uploadsPath = Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "uploads", "profiles");
+            Directory.CreateDirectory(uploadsPath);
+            app.UseStaticFiles();
+
             app.UseAuthentication();
             app.UseAuthorization();
 
