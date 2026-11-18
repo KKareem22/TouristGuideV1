@@ -15,5 +15,11 @@
 
         public string? Category { get; set; }
         public bool? Featured { get; set; }
+        private string? _search;
+        public string? Search
+        {
+            get => _search;
+            set => _search = value?.Trim().ToLower();
+        }
     }
 }

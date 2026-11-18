@@ -17,8 +17,11 @@ namespace TouristGuide.Application.Specification
 
             Criteria = p =>
                 !p.IsDeleted &&
+                (string.IsNullOrEmpty(specParams.Search) || p.Name.ToLower().Contains(specParams.Search)) &&
                 (!parsedCategory.HasValue || p.Category == parsedCategory.Value) &&
                 (!specParams.Featured.HasValue || p.IsFeatured == specParams.Featured.Value);
+
+
 
             OrderBy = p => p.Name;
 
